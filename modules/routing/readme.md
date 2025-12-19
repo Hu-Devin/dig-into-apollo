@@ -54,6 +54,23 @@ Routing类似于现在开车时用到的导航模块，通常考虑的是起点�
 3. 选择终点
 4. 选择开始，开始寻找路径
 
+
+    运行demo算法步骤
+
+    Step0: python -m venv my_osm   我创建的虚拟环境
+   
+    Step1:   cd  C:\Users\hhu37\ford-py-envs\py312_jupyter_spyder_env\Scripts
+   
+    Step2： 在 cmd 中 .\activate.bat   进入虚拟环境
+   
+    Step3:  进入 OSM的目录cd C:\Users\hhu37\Documents\GitHub\osm-pathfinding
+   
+    Step4： 启动python自带的 http server 。    python -m http.server 8000
+   
+    Step5: 打开浏览器  http://localhost:8000/
+
+
+
 上面的项目是基于OSM(openstreetmap)获取的地图数据，如果需要自己制作地图，首先在OSM的[官网](https://www.openstreetmap.org/)导出地图，导出的文件格式为“map.osm”，可以通过浏览器打开查看，然后在项目的tools目录，把OSM地图转成项目用到的(Graph)图。制作demo的过程如下：
 1. 获取地图信息 - 由于OSM的地图都是开源的，所以我们只需要找到对应的区域，并且选择导出，就可以导出地图的原始数据。地图的数据格式为OSM格式。
 2. 构建图 - 根据上述的信息，构建有向图，下载的格式对渲染比较友好，但是对查找最短路径不友好，因此要转换成有向图的格式(apollo的routing模块也是经过了如下的转换)。
