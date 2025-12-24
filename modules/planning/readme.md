@@ -213,6 +213,28 @@ std::vector<routing::LaneWaypoint> future_route_waypoints_;
 <a name="onLanePlanning_init" />
 
 #### 初始化
+
+
+#### V10.0初始化  采用 PluginManager
+
+PlanningBase 现在完全不认识具体的 Planner 类，它只认识 planner_name 这个字符串。
+1、设置默认值： 默认使用 PublicRoadPlanner。这是 Apollo 最核心、最常用的基于参考线的规划器。
+
+      std::string planner_name = "apollo::planning::PublicRoadPlanner";
+
+2、从配置读取： 如果配置文件（通常是 planning_config.pb.txt）中指定了 planner 字段，则覆盖默认值。
+
+      if ("" != config_.planner()) {
+        planner_name = config_.planner();
+        // 补全类名全称，确保包含命名空间
+        planner_name = ConfigUtil::GetFullPlanningClassName(planner_name);
+      }
+
+3、动态实例化： 调用 PluginManager。此时，系统会去寻找在 cyber_plugin.xml 中注册过的插件。
+   注册文件在 modules/planning/planners/public_road/cyber_plugin.xml
+   当 Cyber 启动时，它会扫描这些 XML 文件。当 LoadPlanner() 执行时，PluginManager 就能根据字符串找到对应的工厂函数并创建对象。
+
+#### 以前版本的初始化--依赖DispatchPlanner
 OnLanePlanning的初始化逻辑在Init中，主要实现分配具体的Planner，启动参考线提供器(reference_line_provider_)，代码分析如下：
 ```c++
 Status OnLanePlanning::Init(const PlanningConfig& config) {
